@@ -18,14 +18,29 @@
         ctx.fillStyle = 'black'
 
         let painting = false
+        let isTouchDevice = 'ontouchstart' in document.documentElement
 
-        canvas.onmousedown = () => {
+        if (isTouchDevice) {        // 触摸屏设备
+            canvas.ontouchstart = () => { start() }
+            canvas.ontouchmove = (e) => { move(e) }
+            canvas.ontouchend = () => { end() }
+        } else {                    // PC 设备
+            canvas.onmousedown = () => { start() }
+            canvas.onmousemove = (e) => { move(e) }
+            canvas.onmouseup = () => { end() }
+        }
+
+        function start() {
             painting = true
         }
 
-        canvas.onmousemove = (e) => {
+        function move(e) {
             if (painting) {
-                const { clientX, clientY } = e
+                let event = e
+                if (isTouchDevice) {
+                    event = e.touches[0]
+                }
+                const { clientX, clientY } = event
                 ctx.beginPath()
                 ctx.arc(clientX, clientY, 5, 0, 2 * Math.PI)
                 ctx.fill()
@@ -34,7 +49,7 @@
             }
         }
 
-        canvas.onmouseup = () => {
+        function end() {
             painting = false
         }
         
