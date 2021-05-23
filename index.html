@@ -8,24 +8,36 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div id="canvas"></div>
+    <canvas id="canvas" width="600" height="300"></canvas>
 
     <script>
         let canvas = document.getElementById('canvas')
-        canvas.onmousemove = (e) => {
-            const { clientX, clientY } = e
-            // console.log(clientX, clientY)
-            let div = document.createElement('div')
-            div.style.width = '10px'
-            div.style.height = '10px'
-            div.style.backgroundColor = 'black'
-            div.style.borderRadius = '50%'
-            div.style.position = 'absolute'
-            div.style.left = clientX + 'px'
-            div.style.top = clientY + 'px'
-            div.style.transform = 'translate(-50%, -50%)'
-            canvas.appendChild(div)
+        canvas.width = document.documentElement.clientWidth
+        canvas.height = document.documentElement.clientHeight
+        let ctx = canvas.getContext('2d')
+        ctx.fillStyle = 'black'
+
+        let painting = false
+
+        canvas.onmousedown = () => {
+            painting = true
         }
+
+        canvas.onmousemove = (e) => {
+            if (painting) {
+                const { clientX, clientY } = e
+                ctx.beginPath()
+                ctx.arc(clientX, clientY, 5, 0, 2 * Math.PI)
+                ctx.fill()
+            } else {
+                console.log('啥也不做')
+            }
+        }
+
+        canvas.onmouseup = () => {
+            painting = false
+        }
+        
     </script>
 </body>
 </html>
